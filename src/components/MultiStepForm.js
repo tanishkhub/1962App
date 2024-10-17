@@ -160,7 +160,7 @@ const MultiStepForm = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.post('http://localhost:5000/api/tickets', formData);
+            const response = await axios.post('https://1962logsapi.vercel.app/api/tickets', formData);
             console.log('Ticket saved:', response.data);
             setToastMessage('Form submitted successfully!');
             setToastType('success');
