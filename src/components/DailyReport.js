@@ -8,8 +8,8 @@ const DailyReport = () => {
     const [attendance, setAttendance] = useState([]);
     const [ticketDetails, setTicketDetails] = useState([]);
     const [collectionSummary, setCollectionSummary] = useState([]);
-
     const [expandedRows, setExpandedRows] = useState(new Set()); // State to track expanded rows
+    const [showForm, setShowForm] = useState(true); // State to control form visibility
 
     const carVehicleMapping = {
         1: 'केसली',
@@ -45,7 +45,7 @@ const DailyReport = () => {
         updateDynamicDate(selectedDate);
 
         try {
-            const response = await fetch(`https://1962logsapi.vercel.app/api/tickets/date?date=${selectedDate}`);
+            const response = await fetch(`http://localhost:5000/api/tickets/date?date=${selectedDate}`);
             const data = await response.json();
 
             if (response.ok) {
@@ -97,7 +97,6 @@ const DailyReport = () => {
             setShowForm(true);
         }, 1000); // Delay in milliseconds (1 second)
     };
-
 
     const toggleRow = (index) => {
         const newExpandedRows = new Set(expandedRows);

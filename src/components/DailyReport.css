@@ -1,5 +1,3 @@
-/* DailyReport.css */
-
 /* General Styles */
 .container {
     max-width: 100%;
@@ -7,7 +5,14 @@
 }
 
 /* Page Break */
+.page-break {
+    page-break-after: always;
+    display: block;
+}
 
+.page-break:first-child {
+    page-break-after: avoid; /* Avoid page break at the very beginning */
+}
 
 /* Table Styles */
 .table {
@@ -26,30 +31,6 @@
 /* Header Styles */
 header {
     margin-bottom: 2rem; /* Space below header */
-}
-
-/* Print Styles */
-@media print {
-    .page-break {
-        page-break-after: always;
-        display: block;
-    }
-
-    .page-break:first-child {
-        page-break-after: avoid; /* Avoid page break at the very beginning */
-    }
-    #date-form {
-        display: none;
-      }
-
-    .wrap-text {
-        white-space: pre-wrap; /* Wrap long text in tables */
-    }
-
-    /* Adjust font size dynamically based on content size (optional) */
-    table {
-        font-size: calc(12px - (data-rows) * 0.1px); /* Adjust based on rows */
-    }
 }
 
 /* Mobile Specific Styles */
@@ -81,22 +62,51 @@ header {
     }
 }
 
+/* Print Styles - Optimized for mobile */
 @media print {
+    .container {
+        width: 100%; /* Ensure full width on print */
+        overflow-x: visible; /* Avoid scrolling in print */
+    }
+
     .page-break {
-      page-break-after: always;
-      display: block;
+        page-break-after: always;
+        display: block;
     }
   
     .page-break:first-child {
-      page-break-after: avoid; /* Avoid page break at the very beginning */
+        page-break-after: avoid; /* Avoid page break at the very beginning */
     }
   
     .wrap-text {
-      white-space: pre-wrap; /* Wrap long text in tables */
+        white-space: pre-wrap; /* Wrap long text in tables */
     }
-  
-    /* Adjust font size dynamically based on content size (optional) */
-    table {
-      font-size: calc(12px - (data-rows) * 0.1px); /* Adjust based on rows */
+
+    .table {
+        width: 100%;
+        font-size: calc(10px + (1vw * 0.2)); /* Adjust font size for smaller devices */
     }
-  }
+
+    /* Adjust font size for table data */
+    .table th,
+    .table td {
+        padding: 0.5rem; /* Smaller padding for print */
+        font-size: calc(10px + (1vw * 0.2)); /* Responsive font size */
+    }
+
+    /* Adjust the header */
+    header h1 {
+        font-size: calc(12px + (1vw * 0.2)); /* Responsive header size */
+    }
+
+    /* Full-width buttons for mobile printing */
+    .btn {
+        width: 100%; 
+        margin-bottom: 0.5rem; 
+    }
+    
+    /* Hide elements that are not necessary for print */
+    .no-print {
+        display: none;
+    }
+}
