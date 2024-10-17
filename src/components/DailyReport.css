@@ -38,6 +38,9 @@ header {
     .page-break:first-child {
         page-break-after: avoid; /* Avoid page break at the very beginning */
     }
+    #date-form {
+        display: none;
+      }
 
     .wrap-text {
         white-space: pre-wrap; /* Wrap long text in tables */

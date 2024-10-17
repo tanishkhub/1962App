@@ -85,8 +85,19 @@ const DailyReport = () => {
     }, []);
 
     const printReport = () => {
+        // Hide the form
+        setShowForm(false);
+
+        // Trigger the print dialog
+        
         window.print();
+
+        // Show the form again after a brief delay
+        setTimeout(() => {
+            setShowForm(true);
+        }, 1000); // Delay in milliseconds (1 second)
     };
+
 
     const toggleRow = (index) => {
         const newExpandedRows = new Set(expandedRows);
@@ -107,33 +118,38 @@ const DailyReport = () => {
                 </header>
 
                 <main className="mt-4">
-                    <form id="date-form" className="d-flex flex-column flex-md-row justify-content-center align-items-center mb-4" onSubmit={handleDateSubmit}>
-                        <label htmlFor="report-date" className="form-label me-2">Select Date:</label>
-                        <input
-                            type="date"
-                            id="report-date"
-                            name="report-date"
-                            className="form-control w-auto"
-                            value={selectedDate}
-                            onChange={(e) => setSelectedDate(e.target.value)}
-                        />
-                        <button
-                            type="submit"
-                            className="btn btn-primary ms-3 mt-2 mt-md-0">
-                            Submit
-                        </button>
-                        <div>&nbsp;</div>
-                        <button onClick={printReport} className="btn btn-primary">
-                Print
-            </button>
-                    </form>
+                    {showForm && (
+                        <form id="date-form" className="d-flex flex-column flex-md-row justify-content-center align-items-center mb-4" onSubmit={handleDateSubmit}>
+                            <label htmlFor="report-date" className="form-label me-2">Select Date:</label>
+                            <input
+                                type="date"
+                                id="report-date"
+                                name="report-date"
+                                className="form-control w-auto"
+                                value={selectedDate}
+                                onChange={(e) => setSelectedDate(e.target.value)}
+                            />
+                            <button
+                                type="submit"
+                                className="btn btn-primary ms-3 mt-2 mt-md-0">
+                                Submit
+                            </button>
+                            <div>&nbsp;</div>
+                            <button
+                                type="button" 
+                                onClick={printReport} 
+                                className="btn btn-primary"
+                            >
+                                Print
+                            </button>
+                        </form>
+                    )}
                 </main>
             </section>
 
             <section className="mb-5 page-break">
                 {/* Ticket Detail Section */}
                 <h2 className="h3 text-dark mb-3">Ticket Detail</h2>
-                <div className="table-responsive"></div>
                 <table className="table table-bordered table-hover shadow-sm">
                     <thead className="table-primary">
                         <tr>
@@ -227,8 +243,6 @@ const DailyReport = () => {
                     </tbody>
                 </table>
             </section>
-
-            
         </div>
     );
 };
