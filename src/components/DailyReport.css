@@ -1,0 +1,99 @@
+/* DailyReport.css */
+
+/* General Styles */
+.container {
+    max-width: 100%;
+    overflow-x: auto; /* Allows horizontal scrolling if content exceeds screen width */
+}
+
+/* Page Break */
+
+
+/* Table Styles */
+.table {
+    width: 100%; /* Full width */
+    margin: 1rem 0; /* Add margin for spacing */
+}
+
+/* Table Cells */
+.table th,
+.table td {
+    padding: 0.75rem; /* Adjust padding for better touch targets */
+    text-align: left; /* Left align text for better readability */
+    font-size: 0.9rem; /* Slightly smaller font for better mobile view */
+}
+
+/* Header Styles */
+header {
+    margin-bottom: 2rem; /* Space below header */
+}
+
+/* Print Styles */
+@media print {
+    .page-break {
+        page-break-after: always;
+        display: block;
+    }
+
+    .page-break:first-child {
+        page-break-after: avoid; /* Avoid page break at the very beginning */
+    }
+
+    .wrap-text {
+        white-space: pre-wrap; /* Wrap long text in tables */
+    }
+
+    /* Adjust font size dynamically based on content size (optional) */
+    table {
+        font-size: calc(12px - (data-rows) * 0.1px); /* Adjust based on rows */
+    }
+}
+
+/* Mobile Specific Styles */
+@media (max-width: 576px) {
+    .table {
+        font-size: 0.8rem; /* Smaller font size for mobile */
+    }
+    
+    /* Adjust padding for smaller devices */
+    .table th,
+    .table td {
+        padding: 0.5rem; /* Reduced padding */
+    }
+    
+    /* Form Elements */
+    .form-control {
+        width: 100%; /* Full width input */
+    }
+    
+    /* Center Align Header */
+    header h1 {
+        font-size: 1.5rem; /* Smaller header for mobile */
+    }
+
+    /* Button Styles */
+    .btn {
+        width: 100%; /* Full-width buttons */
+        margin-bottom: 0.5rem; /* Space between buttons */
+    }
+}
+
+@media print {
+    .page-break {
+      page-break-after: always;
+      display: block;
+    }
+  
+    .page-break:first-child {
+      page-break-after: avoid; /* Avoid page break at the very beginning */
+    }
+  
+    .wrap-text {
+      white-space: pre-wrap; /* Wrap long text in tables */
+    }
+  
+    /* Adjust font size dynamically based on content size (optional) */
+    table {
+      font-size: calc(12px - (data-rows) * 0.1px); /* Adjust based on rows */
+    }
+  }

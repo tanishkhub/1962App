@@ -1,0 +1,123 @@
+/* src/HomePage.css */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+
+/* General body and typography styles */
+body {
+  font-family: 'Poppins', sans-serif;
+  background-color: #f8f9fa;
+  color: #333;
+}
+
+/* Hero section for header */
+.hero-section {
+  background: linear-gradient(135deg, #6dd5fa, #2980b9);
+  color: white;
+  border-radius: 8px;
+  padding: 50px;
+  margin-bottom: 30px;
+}
+
+.hero-title {
+  font-size: 3rem;
+  font-weight: 700;
+}
+
+.hero-subtitle {
+  font-size: 1.3rem;
+  font-weight: 300;
+}
+
+/* Card styles */
+.modern-card {
+  border: none;
+  border-radius: 15px;
+  background-color: #fff;
+  transition: transform 0.3s ease-in-out;
+}
+
+.modern-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+.card-title {
+  font-weight: 600;
+  font-size: 1.75rem;
+  color: #333;
+}
+
+/* Button styles */
+.modern-button {
+  font-size: 1.1rem;
+  padding: 15px;
+  border-radius: 30px;
+  transition: all 0.3s ease-in-out;
+}
+
+.modern-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+/* Button gradient styles */
+button.btn-primary {
+  background: linear-gradient(135deg, #6dd5fa, #2980b9);
+  border: none;
+}
+
+button.btn-success {
+  background: linear-gradient(135deg, #a8e063, #56ab2f);
+  border: none;
+}
+
+button.btn-info {
+  background: linear-gradient(135deg, #36d1dc, #5b86e5);
+  border: none;
+}
+
+button.btn-warning {
+  background: linear-gradient(135deg, #f7971e, #ffd200);
+  border: none;
+}
+
+button:focus {
+  box-shadow: none;
+}
+
+/* Floating action button */
+.floating-button {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 1000;
+}
+
+.floating-button button {
+  border-radius: 50%;
+  padding: 20px;
+  font-size: 1.5rem;
+  background: linear-gradient(135deg, #6dd5fa, #2980b9);
+  border: none;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease-in-out;
+}
+
+.floating-button button:hover {
+  transform: translateY(-3px);
+}
+
+/* Fade-in animation */
+.fade-in {
+  animation: fadeIn 0.6s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+
