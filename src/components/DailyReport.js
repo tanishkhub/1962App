@@ -230,13 +230,12 @@ const DailyReport = () => {
                                 <td>{row.doctor}</td>
                                 <td>{row.paravet}</td>
                                 <td>{row.driver}</td>
-                                <td
-                                    className="wrap-text"
-                                    onClick={() => toggleRow(index)} // Toggle on click
-                                    style={{ cursor: 'pointer' }}
-                                >
-                                    {expandedRows.has(index) ? row.comment : row.comment.length > 50 ? `${row.comment.slice(0, 50)}...` : row.comment}
-                                </td>
+                                <td className="wrap-text" onClick={() => toggleRow(index)} style={{ cursor: 'pointer' }}>
+    {expandedRows.has(index) 
+        ? row.comment || "No Comments" // Display the comment or "No Comments"
+        : (row.comment ? row.comment.slice(0, 50) + '...' : 'No Comments')}
+</td>
+
                             </tr>
                         ))}
                     </tbody>
