@@ -18,7 +18,7 @@ const MonthlyPage = () => {
 
         setLoading(true);
         try {
-            const response = await axios.get(`http://localhost:5000/api/tickets/date-range`, {
+            const response = await axios.get(`https://1962logsapi.vercel.app/api/tickets/date-range`, {
                 params: { fromDate, toDate },
             });
             setRecords(response.data);

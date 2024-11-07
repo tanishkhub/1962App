@@ -45,7 +45,7 @@ const DailyReport = () => {
         updateDynamicDate(selectedDate);
 
         try {
-            const response = await fetch(`http://localhost:5000/api/tickets/date?date=${selectedDate}`);
+            const response = await fetch(`https://1962logsapi.vercel.app/api/tickets/date?date=${selectedDate}`);
             const data = await response.json();
 
             if (response.ok) {
