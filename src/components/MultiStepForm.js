@@ -78,7 +78,7 @@ const MultiStepForm = () => {
             const formattedPreviousDate = previousDate.toISOString();
 
             try {
-                const response = await axios.get(`https://1962logsapi.vercel.app/api/tickets/latest/${selectedCarNumber}`, {
+                const response = await axios.get(`http://localhost:5000/api/tickets/latest/${selectedCarNumber}`, {
                     params: { date: formattedPreviousDate }
                 });
                 const prevPendingTicket = Math.max(response.data.pendingTicket || 0, 0);
@@ -160,7 +160,7 @@ const MultiStepForm = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.post('https://1962logsapi.vercel.app/api/tickets', formData);
+            const response = await axios.post('http://localhost:5000/api/tickets', formData);
             console.log('Ticket saved:', response.data);
             setToastMessage('Form submitted successfully!');
             setToastType('success');
