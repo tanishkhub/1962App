@@ -127,7 +127,7 @@ const MonthlyPage = () => {
                             records.map((record) => (
                                 <tr key={record.carNumber}>
                                     {/* Basic Info Columns */}
-                                    <td>{record.carNumber}</td>
+                                    <td>{carNameMapping[record.carNumber] || record.carNumber}</td>
                                     <td>{record.totalNewTickets}</td>
                                     <td>{record.totalAttendedTickets}</td>
                                     <td>{record.totalCancelledTickets}</td>
