@@ -1,6 +1,8 @@
 // MonthlyPage.js
 import React, { useState } from 'react';
 import axios from 'axios';
+import { jsPDF } from 'jspdf';
+import html2canvas from 'html2canvas';
 import './MonthlyPage.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
@@ -30,15 +32,27 @@ const MonthlyPage = () => {
         }
     };
 
-    const handlePrint = () => {
-        document.body.classList.add('printing');
-        const style = document.createElement('style');
-        style.innerHTML = '@media print { @page { size: landscape; } }';
-        document.head.appendChild(style);
-        window.print();
-        document.body.classList.remove('printing');
-        document.head.removeChild(style);
+    const handleSavePDF = async () => {
+        setLoading(true);
+        try {
+            // Capture the entire webpage
+            const element = document.body;
+            const canvas = await html2canvas(element);
+            const imgData = canvas.toDataURL('image/png');
+            // Create a PDF in landscape mode with A4 dimensions
+            const pdf = new jsPDF('landscape', 'mm', 'a4');
+            const pdfWidth = pdf.internal.pageSize.getWidth();
+            const pdfHeight = pdf.internal.pageSize.getHeight();
+            pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+            pdf.save('webpage.pdf');
+        } catch (error) {
+            console.error('Error generating PDF:', error);
+            alert('Failed to generate PDF.');
+        } finally {
+            setLoading(false);
+        }
     };
+
     const carNameMapping = {
         1: 'केसली',
         2: 'मालथौन',
@@ -56,7 +70,7 @@ const MonthlyPage = () => {
     };
 
     return (
-       <div className="container-fluid my-4">
+        <div className="container-fluid my-4">
             <h2 className="text-center text-primary mt-4">Monthly Records</h2>
 
             <div id="date-selector" className="d-flex align-items-center mb-4">
@@ -87,38 +101,37 @@ const MonthlyPage = () => {
                     Fetch Records
                 </button>
                 <button
-                    onClick={handlePrint}
+                    onClick={handleSavePDF}
                     className="btn btn-primary hide-on-print"
                 >
-                    Print
+                    Save PDF
                 </button>
             </div>
 
             <div className="table-responsive">
                 <table className="table table-bordered text-center">
                     <thead className="table-light">
-                    <tr>
-    <th style={{ textAlign: "center" }}>Location</th>
-    <th style={{ textAlign: "center" }}>Total New Tickets</th>
-    <th style={{ textAlign: "center" }}>Total Attended Tickets</th>
-    <th style={{ textAlign: "center" }}>Total Cancelled Tickets</th>
-    <th style={{ textAlign: "center" }}>Total Amount Collected</th>
-    <th style={{ textAlign: "center" }}>Total To Deposit</th>
-    {["DOCTOR", "PARAVET", "DRIVER"].map(role => (
-        <React.Fragment key={role}>
-            <th colSpan="5" style={{ textAlign: "center" }}>{role}</th>
-        </React.Fragment>
-    ))}
-</tr>
-<tr>
-    {["", "", "", "", "", ""].map((_, idx) => <th key={idx} style={{ textAlign: "center" }}></th>)}
-    {[...Array(3)].map(() => 
-        ["P", "A", "L", "WO", "LH"].map(status => (
-            <th key={status} style={{ textAlign: "center" }}>{status}</th>
-        ))
-    )}
-</tr>
-
+                        <tr>
+                            <th style={{ textAlign: "center" }}>Location</th>
+                            <th style={{ textAlign: "center" }}>Total New Tickets</th>
+                            <th style={{ textAlign: "center" }}>Total Attended Tickets</th>
+                            <th style={{ textAlign: "center" }}>Total Cancelled Tickets</th>
+                            <th style={{ textAlign: "center" }}>Total Amount Collected</th>
+                            <th style={{ textAlign: "center" }}>Total To Deposit</th>
+                            {["DOCTOR", "PARAVET", "DRIVER"].map(role => (
+                                <React.Fragment key={role}>
+                                    <th colSpan="5" style={{ textAlign: "center" }}>{role}</th>
+                                </React.Fragment>
+                            ))}
+                        </tr>
+                        <tr>
+                            {["", "", "", "", "", ""].map((_, idx) => <th key={idx} style={{ textAlign: "center" }}></th>)}
+                            {[...Array(3)].map(() => 
+                                ["P", "A", "L", "WO", "LH"].map(status => (
+                                    <th key={status} style={{ textAlign: "center" }}>{status}</th>
+                                ))
+                            )}
+                        </tr>
                     </thead>
                     <tbody>
                         {loading ? (
