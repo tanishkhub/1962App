@@ -56,7 +56,7 @@ const MonthlyPage = () => {
     };
 
     return (
-        <div className="container my-4">
+       <div className="container-fluid my-4">
             <h2 className="text-center text-primary mt-4">Monthly Records</h2>
 
             <div id="date-selector" className="d-flex align-items-center mb-4">
