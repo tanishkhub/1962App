@@ -32,6 +32,16 @@ const MonthlyPage = () => {
         }
     };
 
+    const handlePrint = () => {
+        document.body.classList.add('printing');
+        const style = document.createElement('style');
+        style.innerHTML = '@media print { @page { size: landscape; } }';
+        document.head.appendChild(style);
+        window.print();
+        document.body.classList.remove('printing');
+        document.head.removeChild(style);
+    };
+
     const handleSavePDF = async () => {
         setLoading(true);
         try {
@@ -101,8 +111,14 @@ const MonthlyPage = () => {
                     Fetch Records
                 </button>
                 <button
+                    onClick={handlePrint}
+                    className="btn btn-primary mx-2 hide-on-print"
+                >
+                    Print
+                </button>
+                <button
                     onClick={handleSavePDF}
-                    className="btn btn-primary hide-on-print"
+                    className="btn btn-primary mx-2 hide-on-print"
                 >
                     Save PDF
                 </button>
@@ -125,10 +141,14 @@ const MonthlyPage = () => {
                             ))}
                         </tr>
                         <tr>
-                            {["", "", "", "", "", ""].map((_, idx) => <th key={idx} style={{ textAlign: "center" }}></th>)}
-                            {[...Array(3)].map(() => 
+                            {["", "", "", "", "", ""].map((_, idx) => (
+                                <th key={idx} style={{ textAlign: "center" }}></th>
+                            ))}
+                            {[...Array(3)].map((_, idx) => 
                                 ["P", "A", "L", "WO", "LH"].map(status => (
-                                    <th key={status} style={{ textAlign: "center" }}>{status}</th>
+                                    <th key={`${idx}-${status}`} style={{ textAlign: "center" }}>
+                                        {status}
+                                    </th>
                                 ))
                             )}
                         </tr>
@@ -139,18 +159,15 @@ const MonthlyPage = () => {
                         ) : records.length > 0 ? (
                             records.map((record) => (
                                 <tr key={record.carNumber}>
-                                    {/* Basic Info Columns */}
                                     <td>{carNameMapping[record.carNumber] || record.carNumber}</td>
                                     <td>{record.totalNewTickets}</td>
                                     <td>{record.totalAttendedTickets}</td>
                                     <td>{record.totalCancelledTickets}</td>
                                     <td>{record.totalCollected}</td>
                                     <td>{record.totalToDeposit}</td>
-                                    
-                                    {/* Doctor, Paravet, and Driver Attendance Columns */}
                                     {["doctor", "assistant", "driver"].map(role => (
                                         ["Present", "Absent", "Leave", "WL", "LH"].map(status => (
-                                            <td key={status}>{record[`${role}${status}`]}</td>
+                                            <td key={`${role}-${status}`}>{record[`${role}${status}`]}</td>
                                         ))
                                     ))}
                                 </tr>
