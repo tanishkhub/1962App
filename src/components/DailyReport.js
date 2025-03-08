@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import './DailyReport.css'; // Import the custom CSS file for page break styles
+import './DailyReport.css'; // Custom CSS for page break styles
+import jsPDF from 'jspdf';
+import html2canvas from 'html2canvas';
 
 const DailyReport = () => {
     const [selectedDate, setSelectedDate] = useState('');
@@ -8,8 +10,8 @@ const DailyReport = () => {
     const [attendance, setAttendance] = useState([]);
     const [ticketDetails, setTicketDetails] = useState([]);
     const [collectionSummary, setCollectionSummary] = useState([]);
-    const [expandedRows, setExpandedRows] = useState(new Set()); // State to track expanded rows
-    const [showForm, setShowForm] = useState(true); // State to control form visibility
+    const [expandedRows, setExpandedRows] = useState(new Set());
+    const [showForm, setShowForm] = useState(true);
 
     const carVehicleMapping = {
         1: 'केसली',
@@ -31,23 +33,19 @@ const DailyReport = () => {
         const currentDate = date ? new Date(date) : new Date();
         const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
         const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-
         const currentDayOfWeek = days[currentDate.getDay()];
         const currentDay = currentDate.getDate();
         const currentMonth = months[currentDate.getMonth()];
         const currentYear = currentDate.getFullYear();
-
         setDynamicDate(`${currentDayOfWeek}, ${currentDay} ${currentMonth} ${currentYear}`);
     };
 
     const handleDateSubmit = async (event) => {
         event.preventDefault();
         updateDynamicDate(selectedDate);
-
         try {
             const response = await fetch(`https://1962logsapi.vercel.app/api/tickets/date?date=${selectedDate}`);
             const data = await response.json();
-
             if (response.ok) {
                 setAttendance(data.map(ticket => ({
                     carNumber: carVehicleMapping[ticket.carNumber],
@@ -56,7 +54,6 @@ const DailyReport = () => {
                     driver: ticket.driverAttendance,
                     comment: ticket.comment,
                 })));
-
                 setTicketDetails(data.map(ticket => ({
                     carNumber: carVehicleMapping[ticket.carNumber],
                     newTicket: ticket.newTicket,
@@ -65,7 +62,6 @@ const DailyReport = () => {
                     attended: ticket.attendedTicket,
                     cancelled: ticket.cancelledTicket,
                 })));
-
                 setCollectionSummary(data.map(ticket => ({
                     carNumber: carVehicleMapping[ticket.carNumber],
                     generalAnimals: ticket.generalAnimals,
@@ -85,37 +81,56 @@ const DailyReport = () => {
     }, []);
 
     const printReport = () => {
-        // Hide the form
         setShowForm(false);
-
-        // Trigger the print dialog
-        
         window.print();
-
-        // Show the form again after a brief delay
         setTimeout(() => {
             setShowForm(true);
-        }, 1000); // Delay in milliseconds (1 second)
+        }, 1000);
+    };
+
+    const handleDownloadPDF = () => {
+        setShowForm(false);
+        setTimeout(() => {
+            const input = document.getElementById('pdf-content');
+            html2canvas(input, {
+                scrollX: 0,
+                scrollY: -window.scrollY,
+                width: input.scrollWidth,
+                height: input.scrollHeight,
+            })
+                .then((canvas) => {
+                    const imgData = canvas.toDataURL('image/png');
+                    const pdf = new jsPDF('landscape');
+                    const pdfWidth = pdf.internal.pageSize.getWidth();
+                    const pdfHeight = pdf.internal.pageSize.getHeight();
+                    pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+                    pdf.save('daily-report.pdf');
+                    setShowForm(true);
+                })
+                .catch((error) => {
+                    console.error('Error generating PDF:', error);
+                    setShowForm(true);
+                });
+        }, 100);
     };
 
     const toggleRow = (index) => {
         const newExpandedRows = new Set(expandedRows);
         if (newExpandedRows.has(index)) {
-            newExpandedRows.delete(index); // Collapse row if it is already expanded
+            newExpandedRows.delete(index);
         } else {
-            newExpandedRows.add(index); // Expand row if it is collapsed
+            newExpandedRows.add(index);
         }
         setExpandedRows(newExpandedRows);
     };
 
     return (
-        <div className="container bg-light p-5 rounded shadow-lg">
+        <div id="pdf-content" className="container bg-light p-5 rounded shadow-lg">
             <section className="mb-5">
                 <header className="text-center">
                     <h1 className="display-4 text-primary">1962: Animal Mobile Medical Ambulance Report</h1>
                     <h1 className="h4 text-secondary mt-2">{dynamicDate}</h1>
                 </header>
-
                 <main className="mt-4">
                     {showForm && (
                         <form id="date-form" className="d-flex flex-column flex-md-row justify-content-center align-items-center mb-4" onSubmit={handleDateSubmit}>
@@ -128,26 +143,20 @@ const DailyReport = () => {
                                 value={selectedDate}
                                 onChange={(e) => setSelectedDate(e.target.value)}
                             />
-                            <button
-                                type="submit"
-                                className="btn btn-primary ms-3 mt-2 mt-md-0">
+                            <button type="submit" className="btn btn-primary ms-3 mt-2 mt-md-0">
                                 Submit
                             </button>
-                            <div>&nbsp;</div>
-                            <button
-                                type="button" 
-                                onClick={printReport} 
-                                className="btn btn-primary"
-                            >
+                            <button type="button" onClick={printReport} className="btn btn-primary ms-3 mt-2 mt-md-0">
                                 Print
+                            </button>
+                            <button type="button" onClick={handleDownloadPDF} className="btn btn-primary ms-3 mt-2 mt-md-0">
+                                Download PDF
                             </button>
                         </form>
                     )}
                 </main>
             </section>
-
             <section className="mb-5 page-break">
-                {/* Ticket Detail Section */}
                 <h2 className="h3 text-dark mb-3">Ticket Detail</h2>
                 <table className="table table-bordered table-hover shadow-sm">
                     <thead className="table-primary">
@@ -176,9 +185,7 @@ const DailyReport = () => {
                     </tbody>
                 </table>
             </section>
-
             <section className="page-break">
-                {/* Collection Summary Section */}
                 <h2 className="h3 text-dark mb-3">Collection Summary</h2>
                 <table className="table table-bordered table-hover shadow-sm">
                     <thead className="table-primary">
@@ -207,9 +214,7 @@ const DailyReport = () => {
                     </tbody>
                 </table>
             </section>
-
             <section className="page-break">
-                {/* Attendance Section */}
                 <h2 className="h3 text-dark mb-3">Attendance</h2>
                 <table className="table table-bordered table-hover shadow-sm">
                     <thead className="table-primary">
@@ -219,7 +224,7 @@ const DailyReport = () => {
                             <th>Doctor</th>
                             <th>Paravet</th>
                             <th>Driver</th>
-                            <th>Comments</th> {/* New Comments column */}
+                            <th>Comments</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -231,11 +236,10 @@ const DailyReport = () => {
                                 <td>{row.paravet}</td>
                                 <td>{row.driver}</td>
                                 <td className="wrap-text" onClick={() => toggleRow(index)} style={{ cursor: 'pointer' }}>
-    {expandedRows.has(index) 
-        ? row.comment || "No Comments" // Display the comment or "No Comments"
-        : (row.comment ? row.comment.slice(0, 50) + '...' : 'No Comments')}
-</td>
-
+                                    {expandedRows.has(index) 
+                                        ? row.comment || "No Comments"
+                                        : (row.comment ? row.comment.slice(0, 50) + '...' : 'No Comments')}
+                                </td>
                             </tr>
                         ))}
                     </tbody>
