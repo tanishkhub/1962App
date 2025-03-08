@@ -11,16 +11,16 @@ h2 {
 
 .table-responsive {
     margin-top: 20px;
-    /* Remove horizontal scrolling */
+    /* Allow table to expand without horizontal scroll */
     overflow-x: visible;
 }
 
 table {
     width: 100%;
-    /* Optional: use fixed layout to distribute columns evenly
-       (if you want columns to adjust uniformly, though text may wrap) */
-    table-layout: fixed;
+    /* Auto layout ensures text isn't forcibly shrunk */
+    table-layout: auto;
 }
+
 
 
 .loader {
