@@ -11,7 +11,17 @@ h2 {
 
 .table-responsive {
     margin-top: 20px;
+    /* Remove horizontal scrolling */
+    overflow-x: visible;
 }
+
+table {
+    width: 100%;
+    /* Optional: use fixed layout to distribute columns evenly
+       (if you want columns to adjust uniformly, though text may wrap) */
+    table-layout: fixed;
+}
+
 
 .loader {
     border: 8px solid #f3f3f3; /* Light grey */
