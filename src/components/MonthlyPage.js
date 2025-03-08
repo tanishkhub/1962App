@@ -16,7 +16,6 @@ const MonthlyPage = () => {
             alert("Please select both From Date and To Date.");
             return;
         }
-
         setLoading(true);
         try {
             const response = await axios.get(`https://1962logsapi.vercel.app/api/tickets/date-range`, {
@@ -42,21 +41,31 @@ const MonthlyPage = () => {
     };
 
     const handleDownloadPDF = () => {
-        // Capture the element containing the records
-        const input = document.getElementById('pdf-content');
-        html2canvas(input)
-            .then((canvas) => {
-                const imgData = canvas.toDataURL('image/png');
-                const pdf = new jsPDF('landscape');
-                const pdfWidth = pdf.internal.pageSize.getWidth();
-                const pdfHeight = pdf.internal.pageSize.getHeight();
-                pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
-                pdf.save('monthly-records.pdf');
+        // Add a class to signal printing styles if necessary
+        document.body.classList.add('printing');
+        setTimeout(() => {
+            const input = document.getElementById('pdf-content');
+            html2canvas(input, {
+                scrollX: 0,
+                scrollY: -window.scrollY,
+                width: input.scrollWidth,
+                height: input.scrollHeight,
             })
-            .catch((err) => {
-                console.error("Error generating PDF", err);
-                alert("Failed to generate PDF");
-            });
+                .then((canvas) => {
+                    const imgData = canvas.toDataURL('image/png');
+                    const pdf = new jsPDF('landscape');
+                    const pdfWidth = pdf.internal.pageSize.getWidth();
+                    const pdfHeight = pdf.internal.pageSize.getHeight();
+                    pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+                    pdf.save('monthly-records.pdf');
+                    document.body.classList.remove('printing');
+                })
+                .catch((err) => {
+                    console.error("Error generating PDF", err);
+                    alert("Failed to generate PDF");
+                    document.body.classList.remove('printing');
+                });
+        }, 100);
     };
 
     const carNameMapping = {
@@ -78,7 +87,6 @@ const MonthlyPage = () => {
     return (
         <div className="container my-4">
             <h2 className="text-center text-primary mt-4">Monthly Records</h2>
-
             <div id="date-selector" className="d-flex align-items-center mb-4">
                 <label htmlFor="from-date" className="font-weight-bold me-2">From Date:</label>
                 <input
@@ -89,7 +97,6 @@ const MonthlyPage = () => {
                     value={fromDate}
                     onChange={(e) => setFromDate(e.target.value)}
                 />
-
                 <label htmlFor="to-date" className="font-weight-bold me-2">To Date:</label>
                 <input
                     type="date"
@@ -99,7 +106,6 @@ const MonthlyPage = () => {
                     value={toDate}
                     onChange={(e) => setToDate(e.target.value)}
                 />
-
                 <button
                     onClick={handleFetchRecords}
                     className="btn btn-primary mx-2 hide-on-print"
@@ -119,8 +125,7 @@ const MonthlyPage = () => {
                     Download PDF
                 </button>
             </div>
-
-            {/* Wrap the content you want in the PDF in a container with an ID */}
+            {/* The content wrapper for the PDF */}
             <div id="pdf-content">
                 <div className="table-responsive">
                     <table className="table table-bordered text-center">
